@@ -295,7 +295,7 @@ export class ServerTreeView extends Disposable {
 	 */
 	private filterConnections(treeInput: ConnectionProfileGroup[], view: string): ConnectionProfileGroup[] {
 		if (!treeInput || treeInput.length === 0) {
-			return undefined;
+			return [];
 		}
 		const result = treeInput.map(group => {
 			// Keep active/recent connections and remove the rest
@@ -310,19 +310,13 @@ export class ServerTreeView extends Disposable {
 				});
 			}
 			group.children = this.filterConnections(group.children, view);
-			// Remove subgroups that are undefined
-			if (group.children) {
-				group.children = group.children.filter(group => {
-					return (group) ? true : false;
-				});
-			}
 			// Return a group only if it has a filtered result or subgroup.
 			if ((group.connections && group.connections.length > 0) || (group.children && group.children.length > 0)) {
 				return group;
 			}
 			return undefined;
 		});
-		return result;
+		return result.filter(g => !!g);
 	}
 
 	/**
