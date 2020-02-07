@@ -281,6 +281,7 @@ export class ServerTreeView extends Disposable {
 	}
 
 	public refreshTree(): Promise<void> {
+		console.log('refreshing tree');
 		hide(this.messages);
 		this.clearOtherActions();
 		return TreeUpdateUtils.registeredServerUpdate(this._tree, this._connectionManagementService);
@@ -329,14 +330,17 @@ export class ServerTreeView extends Disposable {
 	 * Set tree elements based on the view (recent/active)
 	 */
 	public showFilteredTree(view: string): void {
+		console.log('showing filtered tree ' + view);
 		hide(this.messages);
 		// Clear other action views if user switched between two views
 		this.clearOtherActions(view);
 		const root = TreeUpdateUtils.getTreeInput(this._connectionManagementService);
 		let treeInput: ConnectionProfileGroup = null;
 		if (root) {
+			console.log('have root');
 			// Filter results based on view
 			const filteredResults = this.filterConnections([root], view);
+			console.log(`${filteredResults?.length} results`);
 			if (!filteredResults || !filteredResults[0]) {
 				show(this.messages);
 				this.messages.focus();
@@ -344,6 +348,7 @@ export class ServerTreeView extends Disposable {
 				treeInput = filteredResults[0];
 			}
 			this._tree.setInput(treeInput).then(async () => {
+				console.log('set input');
 				if (isHidden(this.messages)) {
 					this._tree.getFocus();
 					await this._tree.expandAll(ConnectionProfileGroup.getSubgroups(treeInput));
@@ -352,6 +357,7 @@ export class ServerTreeView extends Disposable {
 				}
 			}, errors.onUnexpectedError);
 		} else {
+			console.log('no root');
 			//no op
 		}
 	}
@@ -426,6 +432,7 @@ export class ServerTreeView extends Disposable {
 	 * Clears the toggle icons for active and recent
 	 */
 	private clearOtherActions(view?: string) {
+		console.log('clearing other actions ' + view);
 		if (!view) {
 			this._activeConnectionsFilterAction.isSet = false;
 		}

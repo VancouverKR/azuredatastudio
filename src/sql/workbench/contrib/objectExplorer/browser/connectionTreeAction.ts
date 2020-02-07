@@ -228,19 +228,23 @@ export class ActiveConnectionsFilterAction extends Action {
 	public run(): Promise<boolean> {
 		if (!this.view) {
 			// return without doing anything
+			console.log('No view');
 			return Promise.resolve(true);
 		}
 		if (this.class === ActiveConnectionsFilterAction.enabledClass) {
+			console.log('Filtering');
 			// show active connections in the tree
 			this.view.showFilteredTree(ActiveConnectionsFilterAction.ACTIVE);
 			this.isSet = true;
 			this.label = ActiveConnectionsFilterAction.showAllConnectionsLabel;
 		} else {
+			console.log('showing full tree');
 			// show full tree
 			this.view.refreshTree();
 			this.isSet = false;
 			this.label = ActiveConnectionsFilterAction.LABEL;
 		}
+		console.log('done');
 		return Promise.resolve(true);
 	}
 }
